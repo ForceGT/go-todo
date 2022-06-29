@@ -33,10 +33,13 @@ func startServer() {
 	api := e.Group("/api")
 
 	roleDao := dao.NewRoleDao(db)
+	userDao := dao.NewUserDao(db)
 
 	roleController := controller.NewRoleController(roleDao)
+	userController := controller.NewUserController(userDao)
 
 	routes.Role(api, roleController)
+	routes.User(api, userController)
 
 	httpServer := &http.Server{
 		Addr: ":8080",
