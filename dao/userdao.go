@@ -22,6 +22,9 @@ type IUserDao interface {
 
 	//Delete the user by the user id
 	DeleteUser(id int) error
+
+	//Update the refresh token of the user
+	UpdateUserToken(db.User) error
 }
 
 type UserDao struct {
@@ -61,5 +64,10 @@ func (ud UserDao) FindUserByUserId(id int) (db.User, error) {
 func (ud UserDao) DeleteUser(id int) error {
 	var user db.User
 	result := ud.db.Where("id = ?", id).Delete(&user)
+	return result.Error
+}
+
+func (u UserDao) UpdateUserToken(user *db.User) error {
+	result := u.db.Model(&user).Update("token", user.Token)
 	return result.Error
 }
