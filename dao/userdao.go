@@ -24,7 +24,7 @@ type IUserDao interface {
 	DeleteUser(id int) error
 
 	//Update the refresh token of the user
-	UpdateUserToken(db.User) error
+	UpdateUserToken(*db.User) error
 }
 
 type UserDao struct {

@@ -10,7 +10,9 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func Todo(e *echo.Echo, controller controller.ITodoController) {
+func Todo(g *echo.Group, controller controller.ITodoController) {
+
+	e := g.Group("todo")
 
 	e.GET("", func(c echo.Context) error {
 		user := middleware.GetUserFromContext(c)

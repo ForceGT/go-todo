@@ -76,6 +76,6 @@ func (uc UserController) DeleteUser(id int) error {
 }
 
 func (uc UserController) UpdateUserToken(user *db.User) error {
-	result := uc.dao.UpdateUserToken(*user)
+	result := uc.dao.UpdateUserToken(user)
 	return result
 }
