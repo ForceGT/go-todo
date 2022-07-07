@@ -12,6 +12,7 @@ type IUserController interface {
 	FindUserByUsername(findUserReq reqModel.FindUserbyNameRequest) (resModel.User, error)
 	FindUserByUserId(findUserReq reqModel.FindUserByIdRequest) (resModel.User, error)
 	FindDBUserByUsername(username string) (db.User, error)
+	FindDBUserByUserID(userId int) (db.User, error)
 	DeleteUser(id int) error
 	UpdateUserToken(*db.User) error
 }
@@ -78,4 +79,9 @@ func (uc UserController) DeleteUser(id int) error {
 func (uc UserController) UpdateUserToken(user *db.User) error {
 	result := uc.dao.UpdateUserToken(user)
 	return result
+}
+
+func (uc UserController) FindDBUserByUserID(userId int) (db.User, error) {
+	result, err := uc.dao.FindUserByUserId(userId)
+	return result, err
 }

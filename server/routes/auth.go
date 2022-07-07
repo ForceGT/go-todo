@@ -97,6 +97,31 @@ func Auth(e *echo.Echo,
 
 		return resModel.ErrorJSON(c, resModel.Unauthorized(errors.New("Invalid refresh token")))
 	})
+
+	auth.POST("/signup", func(c echo.Context) error {
+		reqUser := &reqModel.CreateUserRequest{}
+		bindValErr := validator.BindAndValidateWith(c, reqUser, validator.BindBody)
+		if bindValErr != nil {
+			return resModel.BadRequest(bindValErr)
+		}
+
+		userID, err := userController.CreateUser(*reqUser)
+		if err != nil {
+			return resModel.InternalServerError(err)
+		}
+
+		dbUser, err := userController.FindDBUserByUserID(userID)
+		if err != nil {
+			return resModel.InternalServerError(err)
+		}
+
+		jwtTokens, jwtError := generateTokensAndUpdateUser(c, dbUser, userController, authController)
+		if jwtError != nil {
+			return resModel.InternalServerError(jwtError)
+		}
+
+		return resModel.SuccessJSON(c, jwtTokens)
+	})
 }
 
 func generateTokensAndUpdateUser(
