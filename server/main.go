@@ -6,6 +6,7 @@ import (
 	"go_todo/dao"
 	"go_todo/db"
 	"go_todo/server/controller"
+	"go_todo/server/middleware"
 	"go_todo/server/routes"
 	"go_todo/server/validator"
 	"log"
@@ -30,7 +31,6 @@ func startServer() {
 
 	e := echo.New()
 	e.Validator = validator.NewEchoRequestValidator()
-	api := e.Group("/api")
 
 	roleDao := dao.NewRoleDao(db)
 	userDao := dao.NewUserDao(db)
@@ -39,6 +39,13 @@ func startServer() {
 	roleController := controller.NewRoleController(roleDao)
 	userController := controller.NewUserController(userDao)
 	todoController := controller.NewTodoController(todoDao)
+
+	authController := controller.NewAuthController()
+	routes.Auth(e, userController, authController)
+
+	jwtMiddleware := middleware.GetJWTMiddleware(userController)
+
+	api := e.Group("/api", jwtMiddleware)
 
 	routes.Role(api, roleController)
 	routes.User(api, userController)

@@ -20,7 +20,7 @@ var (
 	adminRoleID = 2
 )
 
-func getJWTMiddleware(controller controller.IUserController) echo.MiddlewareFunc {
+func GetJWTMiddleware(controller controller.IUserController) echo.MiddlewareFunc {
 	return middleware.JWTWithConfig(middleware.JWTConfig{
 		SigningKey: config.Secret,
 		ParseTokenFunc: func(auth string, c echo.Context) (interface{}, error) {
